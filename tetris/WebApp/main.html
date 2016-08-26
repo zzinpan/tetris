@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+body{padding: 0; margin: 0; overflow: hidden;}
+#iframe{position: absolute; width: 100%; height: 100%; border: #ccc solid 1px;}
+#tetrisWord{top: 45%; left: 45%; opacity: 0; margin-top:-57px; margin-left:-194px; z-index: 9999; position: absolute; color: white; font-family: sans-serif; font-size: 100px; font-weight: bold;}
+#startWord{width: 100%; top: 50%; opacity: 0; margin-top:-57px; z-index: 9999; position: absolute; color: white; font-family: sans-serif; font-size: 100px; font-weight: bold; text-align: center;}
+#tryAgain{color: white; font-family: sans-serif; font-size: 50px; font-weight: bold; cursor: pointer; display: none;}
+#tryAgain:HOVER{color: #616161;}
+#startWord span:HOVER{color: #616161; cursor: pointer;}
+</style>
+<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+<script type="text/javascript">
+var tetris = null;
+
+function TETRIS_CB_TETRIS(tetrisCnt){
+	
+	var $tetrisWord = $("#tetrisWord");
+	var $tetrisCnt = $("#tetrisCount");
+	
+	if(tetrisCnt == 1){
+		$tetrisWord.html("TETRIS!");
+	}else{
+		$tetrisWord.html("TETRIS! x"+tetrisCnt);
+	}
+	
+	$tetrisWord.animate({left:"50%", top: "50%", opacity: 1}, 500, function(){
+		setTimeout(function(){
+			$tetrisWord.css({left:"45%", top:"45%", opacity: 0});			
+		},200);
+	});
+	
+	$tetrisCnt.html(parseInt($tetrisCnt.html())+tetrisCnt);
+	
+}
+
+function TETRIS_CB_GAME_OVER(){
+	var $gameover = $("#gameover");
+	$gameover.animate({left:"50%", top: "50%", opacity: 1}, 500, function(){
+		$gameover.animate({marginTop: "-86px"}, 500);
+		$("#tryAgain").slideDown(500);
+	});
+}
+
+$(document).ready(function(){
+	
+	tetris = document.getElementById("iframe").contentWindow;
+	$("#startWord").animate({opacity: 1}, 1000);
+	
+	$("#tryAgain").click(function(){
+		$("#tetrisCount").html("0");
+		var $gameover = $("#gameover");
+		$gameover.animate({left:"60%", top: "50%", opacity: 0}, 500, function(){
+			$gameover.css({marginTop: "-57px", left: "40%"});
+			$("#tryAgain").hide();
+			tetris.TETRIS_CMD_START_GAME();
+		});
+	});
+	
+	$("#startWord").click(function(){
+		$("#tetrisCount").html("0");
+		var $startWord = $("#startWord");
+		$startWord.html("GO!");
+		$startWord.css({opacity: 0, marginTop: "-67px"});
+		$startWord.animate({fontSize: "120px", opacity: 1}, 300, function(){
+			setTimeout(function(){
+				$startWord.remove();
+			},500);
+			tetris.TETRIS_CMD_START_GAME();
+		});
+	});
+	
+});
+
+</script>
+</head>
+<body>
+<iframe id="iframe" src="tetris/tetris-main.html"></iframe>
+
+<div id="tetrisWord">TETRIS!</div>
+
+<div id="gameover" style="top:50%; left:40%; z-index: 9999; position: absolute; text-align: center; opacity: 0; margin-left: -305px; margin-top: -57px;">
+	<div style="color: white; font-family: sans-serif; font-size: 100px; font-weight: bold; cursor: default;">GAME OVER</div>
+	<div id="tryAgain">TRY AGAIN?</div>
+</div>
+<div id="startWord"><span>READY?</span></div>
+<div id="tetrisCount" style="position: absolute; font-size: 100px; color: white; font-family: sans-serif; font-weight: bold; opacity: 0.5; top: 50px; left: 50px;"></div>
+</body>
+</html>

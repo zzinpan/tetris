@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>plane</title>
+<style type="text/css">
+body{padding: 0; margin: 0; overflow: hidden;}
+.canvas{position: absolute; width: 100%; height: 100%; border: #ccc solid 1px;}
+</style>
+<script type="text/javascript" src="tetris-main.js"></script>
+<script type="text/javascript" src="tetris-object.js"></script>
+<script type="text/javascript" src="tetris-event.js"></script>
+<script type="text/javascript">
+var tetris;
+function onload(){
+	
+	tetris = new Tetris();
+	tetris.canvas = document.getElementById("canvas"); 
+	tetris.ctx = canvas.getContext("2d");
+	
+	resize();
+	
+	tetris.userInterfaceInit();
+	tetris.tileInit();
+	
+}
+
+function resize(){
+	var canvas = document.getElementById("canvas");
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+}
+
+function TETRIS_CMD_START_GAME(){
+	tetris.tileClear();
+	tetris.startGame();	
+}
+
+function TETRIS_CB_GAME_OVER(){
+	try{ parent.TETRIS_CB_GAME_OVER(); }catch(e){}
+}
+
+function TETRIS_CB_TETRIS(tetrisCnt){
+	try{ parent.TETRIS_CB_TETRIS(tetrisCnt); }catch(e){}
+}
+
+</script>
+</head>
+<body onload="onload();">
+<canvas id="canvas" class="canvas">You need IE9.</canvas>
+</body>
+</html>
